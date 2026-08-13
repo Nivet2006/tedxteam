@@ -1,17 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight } from 'lucide-react';
 import { getTeamTheme, teamThemes, TeamGroup } from '@/lib/themes';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export interface GridMember {
   id: string;
@@ -38,37 +32,11 @@ function getValidPhotoUrl(url?: string | null): string {
 export function TeamGrid({ members }: { members: GridMember[] }) {
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
-  const gridRef = useRef<HTMLDivElement>(null);
 
   const filteredMembers =
     activeFilter === 'all'
       ? members
       : members.filter((m) => m.team.toLowerCase() === activeFilter.toLowerCase());
-
-  useEffect(() => {
-    if (!gridRef.current) return;
-
-    const cards = gridRef.current.querySelectorAll('.team-card');
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        cards,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: 0.05,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: 'top 90%',
-          },
-        }
-      );
-    });
-
-    return () => ctx.revert();
-  }, [filteredMembers]);
 
   const filterCategories = ['all', ...Object.keys(teamThemes)];
 
@@ -85,10 +53,11 @@ export function TeamGrid({ members }: { members: GridMember[] }) {
               <button
                 key={cat}
                 onClick={() => setActiveFilter(cat)}
-                className={`min-h-[44px] rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md flex items-center justify-center ${isActive
+                className={`min-h-[44px] rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md flex items-center justify-center ${
+                  isActive
                     ? 'bg-[#EB0028] text-white shadow-lg shadow-red-600/30 scale-105 border border-red-400/40'
                     : 'bg-white/5 text-gray-300 border border-white/10 hover:bg-white/15 hover:border-white/20 hover:text-white'
-                  }`}
+                }`}
               >
                 {cat === 'all' ? 'All Members' : theme?.name || cat}
               </button>
@@ -98,9 +67,9 @@ export function TeamGrid({ members }: { members: GridMember[] }) {
       </div>
 
       {/* Cards Grid */}
-      <div ref={gridRef} className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full">
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full">
         <AnimatePresence mode="popLayout">
-          {filteredMembers.map((member) => {
+          {filteredMembers.map((member, index) => {
             const theme = getTeamTheme(member.team);
             const imageSrc = failedImages[member.id]
               ? FALLBACK_PHOTO
@@ -110,24 +79,25 @@ export function TeamGrid({ members }: { members: GridMember[] }) {
               <motion.div
                 key={member.id}
                 layout
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.92 }}
-                transition={{ duration: 0.3 }}
-                className="team-card group relative overflow-hidden rounded-3xl border p-4 sm:p-5 backdrop-blur-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_16px_40px_rgba(0,0,0,0.5)] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] flex flex-col justify-between"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                viewport={{ once: true, margin: "0px 0px -50px 0px" }}
+                transition={{ duration: 0.35, delay: Math.min(index * 0.03, 0.3) }}
+                className="team-card group relative overflow-hidden rounded-3xl border p-4 sm:p-5 backdrop-blur-md transition-transform duration-300 hover:-translate-y-1 shadow-[0_8px_24px_rgba(0,0,0,0.4)] flex flex-col justify-between"
                 style={{
                   borderColor: theme.borderColor,
                   backgroundColor: theme.cardBg,
                 }}
               >
                 {/* Glass Light Reflection Gradient */}
-                <div className="pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-100" />
 
                 {/* Accent Glow on Hover */}
                 <div
-                  className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   style={{
-                    boxShadow: `inset 0 0 35px ${theme.accentGlow}`,
+                    boxShadow: `inset 0 0 25px ${theme.accentGlow}`,
                   }}
                 />
 
@@ -139,8 +109,8 @@ export function TeamGrid({ members }: { members: GridMember[] }) {
                       alt={member.name}
                       fill
                       onError={() => setFailedImages((prev) => ({ ...prev, [member.id]: true }))}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+                      className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90" />
 
@@ -195,3 +165,4 @@ export function TeamGrid({ members }: { members: GridMember[] }) {
     </section>
   );
 }
+

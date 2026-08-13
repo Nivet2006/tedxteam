@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { MeshDistortMaterial, Float, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Scroll-reactive 3D sculpture component with ultra-smooth lerping
-function SculpturalEnvironment() {
+function SculpturalEnvironment({ isVisible }: { isVisible: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const secondaryMeshRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
@@ -19,7 +18,7 @@ function SculpturalEnvironment() {
   const targetX = isMobile ? 0.3 : 1.6;
   const targetY = isMobile ? -0.3 : -0.2;
 
-  // Passive smooth scroll tracking without layout thrashing
+  // Passive smooth scroll tracking
   const scrollProgressRef = useRef(0);
   const currentScrollRef = useRef(0);
 
@@ -39,12 +38,14 @@ function SculpturalEnvironment() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial measure
+    handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useFrame((state, delta) => {
+    if (!isVisible) return;
+
     const time = state.clock.getElapsedTime();
 
     // Frame-rate independent smooth damping for scroll interpolation
@@ -52,7 +53,7 @@ function SculpturalEnvironment() {
       currentScrollRef.current,
       scrollProgressRef.current,
       4,
-      delta
+      Math.min(delta, 0.1)
     );
 
     const p = currentScrollRef.current;
@@ -75,37 +76,39 @@ function SculpturalEnvironment() {
         groupRef.current.position.y,
         targetY - p * 2.2,
         3,
-        delta
+        Math.min(delta, 0.1)
       );
       groupRef.current.position.x = THREE.MathUtils.damp(
         groupRef.current.position.x,
         targetX + p * 1.0,
         3,
-        delta
+        Math.min(delta, 0.1)
       );
     }
   });
 
+  const sparkleSize = useMemo(() => isMobile ? 2.5 : 3.5, [isMobile]);
+
   return (
     <group ref={groupRef} position={[targetX, targetY, 0]}>
-      <Float speed={1.2} rotationIntensity={0.6} floatIntensity={1.0}>
-        {/* Primary TEDx Metallic Red Twisted Ribbon / Torus Knot */}
+      <Float speed={1.0} rotationIntensity={0.5} floatIntensity={0.8}>
+        {/* Primary Metallic Red Torus Knot - Geometry optimized (80, 20) */}
         <mesh ref={meshRef} scale={baseScale}>
-          <torusKnotGeometry args={[1.2, 0.36, 160, 32, 2, 3]} />
+          <torusKnotGeometry args={[1.2, 0.36, isMobile ? 48 : 80, isMobile ? 16 : 20, 2, 3]} />
           <MeshDistortMaterial
             color="#EB0028"
-            roughness={0.18}
-            metalness={0.82}
-            distort={0.2}
-            speed={1.2}
-            clearcoat={0.7}
-            clearcoatRoughness={0.25}
+            roughness={0.2}
+            metalness={0.8}
+            distort={isMobile ? 0.1 : 0.18}
+            speed={1.0}
+            clearcoat={isMobile ? 0.4 : 0.6}
+            clearcoatRoughness={0.3}
           />
         </mesh>
 
-        {/* Secondary Background Dark Metallic Accent Ring */}
+        {/* Secondary Metallic Accent Ring - Geometry optimized (16, 40) */}
         <mesh ref={secondaryMeshRef} scale={baseScale * 1.35} position={[-0.4, 0.2, -1.5]}>
-          <torusGeometry args={[1.8, 0.07, 24, 80]} />
+          <torusGeometry args={[1.8, 0.07, 16, isMobile ? 30 : 40]} />
           <meshStandardMaterial
             color="#1E293B"
             roughness={0.3}
@@ -117,28 +120,70 @@ function SculpturalEnvironment() {
 
       {/* Floating Particles */}
       <Sparkles
-        count={isMobile ? 30 : 60}
+        count={isMobile ? 15 : 35}
         scale={[12, 12, 12]}
-        size={THREE.MathUtils.randFloat(2, 4)}
-        speed={0.3}
+        size={sparkleSize}
+        speed={0.25}
         color="#EB0028"
-        opacity={0.5}
+        opacity={0.4}
       />
     </group>
   );
 }
 
 export default function Hero3D() {
+  const [isVisible, setIsVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    // Check viewport width & reduced motion
+    const checkViewport = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleMotionChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handleMotionChange);
+
+    checkViewport();
+    window.addEventListener('resize', checkViewport, { passive: true });
+
+    // Tab visibility listener
+    const handleVisibility = () => {
+      setIsVisible(document.visibilityState === 'visible');
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      window.removeEventListener('resize', checkViewport);
+      mediaQuery.removeEventListener('change', handleMotionChange);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, []);
+
+  // Fallback view for reduced motion
+  if (prefersReducedMotion) {
+    return (
+      <div className="fixed inset-0 z-0 pointer-events-none bg-[#06070B]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-950/20 via-slate-950/80 to-[#06070B]" />
+      </div>
+    );
+  }
+
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 45 }}
-      dpr={[1, 2]}
+      dpr={isMobile ? [1, 1] : [1, 1.25]}
       gl={{
-        antialias: true,
+        antialias: !isMobile,
         alpha: true,
         powerPreference: 'high-performance',
-        precision: 'highp',
+        precision: isMobile ? 'mediump' : 'highp',
       }}
+      frameloop={isVisible ? 'always' : 'never'}
       style={{
         position: 'fixed',
         top: 0,
@@ -149,14 +194,14 @@ export default function Hero3D() {
         zIndex: 0,
       }}
     >
-      {/* Cinematic Ambient Lighting */}
+      {/* Lighting */}
       <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 15, 8]} intensity={1.8} color="#FFFFFF" />
-      <directionalLight position={[-10, -10, -5]} intensity={1.2} color="#EB0028" />
-      <pointLight position={[0, 0, 5]} intensity={0.8} color="#FF2A5F" />
-      <spotLight position={[5, 8, 5]} angle={0.4} penumbra={1} intensity={2} color="#FFFFFF" />
+      <directionalLight position={[10, 15, 8]} intensity={1.6} color="#FFFFFF" />
+      <directionalLight position={[-10, -10, -5]} intensity={1.0} color="#EB0028" />
+      <pointLight position={[0, 0, 5]} intensity={0.6} color="#FF2A5F" />
 
-      <SculpturalEnvironment />
+      <SculpturalEnvironment isVisible={isVisible} />
     </Canvas>
   );
 }
+

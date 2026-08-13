@@ -15,17 +15,23 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
       smoothWheel: true,
     });
 
+    let rafId: number;
+
     function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+      if (document.visibilityState === 'visible') {
+        lenis.raf(time);
+      }
+      rafId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(rafId);
       lenis.destroy();
     };
   }, []);
 
   return <>{children}</>;
 }
+

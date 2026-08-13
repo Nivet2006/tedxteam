@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   title: 'TEDxGCEM Team Identity System',
   description: 'Digital identity and badge QR profile platform for TEDxGCEM team members',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
   },
 };
 

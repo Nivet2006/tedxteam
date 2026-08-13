@@ -85,11 +85,10 @@ export function TeamGrid({ members }: { members: GridMember[] }) {
               <button
                 key={cat}
                 onClick={() => setActiveFilter(cat)}
-                className={`min-h-[44px] rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md flex items-center justify-center ${
-                  isActive
+                className={`min-h-[44px] rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md flex items-center justify-center ${isActive
                     ? 'bg-[#EB0028] text-white shadow-lg shadow-red-600/30 scale-105 border border-red-400/40'
                     : 'bg-white/5 text-gray-300 border border-white/10 hover:bg-white/15 hover:border-white/20 hover:text-white'
-                }`}
+                  }`}
               >
                 {cat === 'all' ? 'All Members' : theme?.name || cat}
               </button>
@@ -177,7 +176,7 @@ export function TeamGrid({ members }: { members: GridMember[] }) {
                 {/* Action Link */}
                 <div className="relative z-10 mt-4 border-t border-white/10 pt-3 flex items-center justify-between">
                   <span className="text-[11px] uppercase tracking-wider text-gray-400 font-medium">
-                    Digital Badge Profile
+                     
                   </span>
 
                   <Link

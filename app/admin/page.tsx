@@ -2,11 +2,19 @@ import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { AdminDashboardClient } from '@/components/admin/AdminDashboardClient';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 import { Plus, Users, QrCode, TrendingUp } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    redirect('/admin/login');
+  }
+
   const members = await prisma.member.findMany({
     orderBy: { scanCount: 'desc' },
     include: {

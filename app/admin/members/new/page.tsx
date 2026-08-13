@@ -1,7 +1,15 @@
 import React from 'react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 import { MemberForm } from '@/components/admin/MemberForm';
 
-export default function NewMemberPage() {
+export default async function NewMemberPage() {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    redirect('/admin/login');
+  }
+
   return (
     <div className="space-y-6">
       <div>

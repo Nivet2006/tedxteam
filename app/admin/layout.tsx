@@ -3,18 +3,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { redirect } from 'next/navigation';
 import { LayoutDashboard, PlusCircle, ShieldCheck } from 'lucide-react';
 import { SignOutButton } from '@/components/admin/SignOutButton';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
 
-  // Auth gate check
+  // If unauthenticated (e.g. visiting /admin/login or unauthenticated route)
   if (!session) {
-    redirect('/admin/login');
+    return (
+      <div className="min-h-screen bg-[#07090E] text-slate-100 selection:bg-red-500 selection:text-white">
+        {children}
+      </div>
+    );
   }
 
+  // Authenticated Admin Dashboard Layout
   return (
     <div className="min-h-screen bg-[#07090E] text-slate-100 selection:bg-red-500 selection:text-white overflow-x-hidden">
       {/* Top Admin Navigation Header */}

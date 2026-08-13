@@ -15,9 +15,9 @@ function SculpturalEnvironment() {
   const isMobile = viewport.width < 6;
 
   // Responsive scale and position offset
-  const baseScale = isMobile ? 1.6 : 2.5;
-  const targetX = isMobile ? 0.3 : 1.6;
-  const targetY = isMobile ? -0.3 : -0.2;
+  const baseScale = isMobile ? 1.1 : 1.8;
+  const targetX = isMobile ? 0.2 : 1.4;
+  const targetY = isMobile ? -0.2 : -0.1;
 
   // Passive smooth scroll tracking without layout thrashing
   const scrollProgressRef = useRef(0);
@@ -51,7 +51,7 @@ function SculpturalEnvironment() {
     currentScrollRef.current = THREE.MathUtils.damp(
       currentScrollRef.current,
       scrollProgressRef.current,
-      4,
+      1.5,
       delta
     );
 
@@ -59,28 +59,28 @@ function SculpturalEnvironment() {
 
     // Continuous ultra-smooth ambient rotation
     if (meshRef.current) {
-      meshRef.current.rotation.x = Math.sin(time * 0.12) * 0.15 + p * 1.2;
-      meshRef.current.rotation.y = time * 0.08 + p * 1.8;
-      meshRef.current.rotation.z = Math.cos(time * 0.08) * 0.1;
+      meshRef.current.rotation.x = Math.sin(time * 0.08) * 0.12 + p * 0.8;
+      meshRef.current.rotation.y = time * 0.05 + p * 1.2;
+      meshRef.current.rotation.z = Math.cos(time * 0.05) * 0.07;
     }
 
     if (secondaryMeshRef.current) {
-      secondaryMeshRef.current.rotation.x = -time * 0.1 - p * 1.0;
-      secondaryMeshRef.current.rotation.y = time * 0.06 + p * 1.4;
+      secondaryMeshRef.current.rotation.x = -time * 0.06 - p * 0.7;
+      secondaryMeshRef.current.rotation.y = time * 0.04 + p * 0.9;
     }
 
     // Smooth group position damping
     if (groupRef.current) {
       groupRef.current.position.y = THREE.MathUtils.damp(
         groupRef.current.position.y,
-        targetY - p * 2.2,
-        3,
+        targetY - p * 1.5,
+        1.5,
         delta
       );
       groupRef.current.position.x = THREE.MathUtils.damp(
         groupRef.current.position.x,
-        targetX + p * 1.0,
-        3,
+        targetX + p * 0.6,
+        1.5,
         delta
       );
     }
@@ -88,7 +88,7 @@ function SculpturalEnvironment() {
 
   return (
     <group ref={groupRef} position={[targetX, targetY, 0]}>
-      <Float speed={1.2} rotationIntensity={0.6} floatIntensity={1.0}>
+      <Float speed={0.7} rotationIntensity={0.3} floatIntensity={0.6}>
         {/* Primary TEDx Metallic Red Twisted Ribbon / Torus Knot */}
         <mesh ref={meshRef} scale={baseScale}>
           <torusKnotGeometry args={[1.2, 0.36, 160, 32, 2, 3]} />
@@ -131,7 +131,7 @@ function SculpturalEnvironment() {
 export default function Hero3D() {
   return (
     <Canvas
-      camera={{ position: [0, 0, 6], fov: 45 }}
+      camera={{ position: [0, 0, 7], fov: 60 }}
       dpr={[1, 2]}
       gl={{
         antialias: true,

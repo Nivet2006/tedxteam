@@ -22,7 +22,7 @@ export default async function HomePage() {
     },
   });
 
-  const gridMembers = members.map((m) => ({
+  const gridMembers = members.map((m: { id: string; slug: string; name: string; role: string; team: string; oneLiner: string; photoUrl: string; scanCount: number }) => ({
     id: m.id,
     slug: m.slug,
     name: m.name,

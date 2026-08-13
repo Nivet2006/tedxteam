@@ -21,7 +21,7 @@ async function verify() {
   console.log('\nMember Roster Audit:');
   let invalidPhotoCount = 0;
 
-  members.forEach((m, idx) => {
+  members.forEach((m: { name: string; slug: string; team: string; role: string; photoUrl: string }, idx: number) => {
     const isLocal = m.photoUrl.startsWith('/') && !m.photoUrl.startsWith('//');
     if (!isLocal || m.photoUrl.includes('unsplash')) {
       invalidPhotoCount++;

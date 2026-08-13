@@ -36,7 +36,7 @@ export default async function AdminDashboardPage() {
     updatedAt: m.updatedAt.toISOString(),
     scans: m.scans.map((s) => ({
       scannedAt: s.scannedAt.toISOString(),
-      source: s.source,
+      source: s.source || 'direct',
     })),
   }));
 

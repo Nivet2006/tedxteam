@@ -96,7 +96,16 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
           style={{ backgroundColor: theme.accentColor }}
         />
 
-
+        {/* Sticky Floating Back Button */}
+        <div className="fixed top-4 left-4 z-50 sm:top-5 sm:left-5">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-3.5 py-2 text-xs font-semibold text-white shadow-lg backdrop-blur-xl transition-all hover:border-white/40 hover:bg-white/10 active:scale-95"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Back</span>
+          </Link>
+        </div>
 
         {/* Profile Body */}
         <main className="mx-auto max-w-5xl px-4 sm:px-6 py-8 sm:py-16">

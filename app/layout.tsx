@@ -8,6 +8,11 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'TEDxGCEM | A rough Sketch',
   description: 'Digital identity and badge QR profile platform for TEDxGCEM team members',
+  icons: [
+    { rel: 'icon', url: '/logo.png', type: 'image/png' },
+    { rel: 'shortcut icon', url: '/logo.png', type: 'image/png' },
+    { rel: 'apple-touch-icon', url: '/logo.png' },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

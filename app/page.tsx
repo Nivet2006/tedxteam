@@ -1,9 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { prisma } from '@/lib/prisma';
-import { TeamGrid } from '@/components/TeamGrid';
 import Hero3D from '@/components/Hero3DWrapper';
-import { ArrowDown } from 'lucide-react';
 
 export const revalidate = 60; // ISR revalidation
 
@@ -62,26 +60,7 @@ export default async function HomePage() {
               className="inline-block h-[26px] sm:h-[30px] w-auto object-contain align-middle"
             />
           </p>
-
-          <div className="mt-10 sm:mt-12 flex items-center justify-center lg:justify-start gap-3 text-xs uppercase tracking-widest text-gray-400 font-semibold">
-            <span>Scroll to explore</span>
-            <ArrowDown className="h-4 w-4 animate-bounce text-[#EB0028]" />
-          </div>
         </section>
-
-        {/* Interactive Team Grid Section */}
-        <main id="team" className="mx-auto w-full max-w-7xl px-4 sm:px-6 py-12 sm:py-16 scroll-mt-20">
-          <div className="mb-8 sm:mb-12 text-center">
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Team Directory
-            </h2>
-            <p className="mt-2 text-xs sm:text-sm text-gray-400 font-light">
-
-            </p>
-          </div>
-
-          <TeamGrid members={gridMembers} />
-        </main>
 
         {/* Global Footer */}
         <footer className="border-t border-white/10 bg-black/80 px-4 sm:px-6 py-8 backdrop-blur-md text-center text-xs text-gray-400">

@@ -159,9 +159,9 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
       },
       {
         name: 'GitHub',
-        url: member.github || `https://github.com/search?q=${encodeURIComponent(member.name)}`,
+        url: member.github || (member.slug === 'nived-shaji' ? 'https://github.com/Nivet2006' : `https://github.com/search?q=${encodeURIComponent(member.name)}`),
         icon: GithubIcon,
-        tag: member.github ? 'CODE ARCHIVE' : 'SEARCH ON GITHUB',
+        tag: member.github || member.slug === 'nived-shaji' ? 'CODE ARCHIVE' : 'SEARCH ON GITHUB',
       },
       {
         name: 'Portfolio',

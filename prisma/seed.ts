@@ -324,6 +324,7 @@ async function main() {
       interests: ['Full-Stack Engineering', 'Next.js', 'Prisma', 'System Architecture'],
       photoUrl: '/members/placeholder.png',
       instagram: 'https://www.instagram.com/nivet.2006',
+      github: 'https://github.com/Nivet2006',
     },
     {
       slug: 'yeshwanth',
@@ -352,6 +353,7 @@ async function main() {
         interests: JSON.stringify(m.interests),
         photoUrl: m.photoUrl,
         instagram: (m as any).instagram || null,
+        github: (m as any).github || null,
       },
       create: {
         slug: m.slug,
@@ -364,6 +366,7 @@ async function main() {
         interests: JSON.stringify(m.interests),
         photoUrl: m.photoUrl,
         instagram: (m as any).instagram || null,
+        github: (m as any).github || null,
         scanCount: Math.floor(Math.random() * 50) + 10,
       },
     });

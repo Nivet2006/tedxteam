@@ -521,13 +521,14 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
         <footer className="relative border-t border-white/10 bg-black/60 px-6 sm:px-12 py-16 backdrop-blur-xl z-10">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
             <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="font-extrabold tracking-tighter text-2xl text-white">
-                  TED<span className="text-[#EB0028]">x</span>
-                </span>
-                <span className="text-sm font-light uppercase tracking-[0.25em] text-neutral-400 border-l border-white/20 pl-2">
-                  GCEM
-                </span>
+              <div className="mb-3">
+                <Image
+                  src="/tedxgcem.png"
+                  alt="TEDxGCEM Logo"
+                  width={152}
+                  height={43}
+                  className="h-8 w-auto object-contain opacity-90"
+                />
               </div>
               <p className="text-xs font-mono tracking-[0.2em] text-neutral-400 uppercase">
                 IDEAS WORTH SPREADING.

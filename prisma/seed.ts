@@ -323,6 +323,7 @@ async function main() {
       contribution: 'Built the TEDxGCEM Digital Identity System, badge QR engine, scan tracking APIs, and admin platform.',
       interests: ['Full-Stack Engineering', 'Next.js', 'Prisma', 'System Architecture'],
       photoUrl: '/members/placeholder.png',
+      instagram: 'https://www.instagram.com/nivet.2006',
     },
     {
       slug: 'yeshwanth',
@@ -350,6 +351,7 @@ async function main() {
         contribution: m.contribution,
         interests: JSON.stringify(m.interests),
         photoUrl: m.photoUrl,
+        instagram: (m as any).instagram || null,
       },
       create: {
         slug: m.slug,
@@ -361,6 +363,7 @@ async function main() {
         contribution: m.contribution,
         interests: JSON.stringify(m.interests),
         photoUrl: m.photoUrl,
+        instagram: (m as any).instagram || null,
         scanCount: Math.floor(Math.random() * 50) + 10,
       },
     });

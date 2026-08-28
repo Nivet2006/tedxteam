@@ -82,6 +82,12 @@ const GlobeIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const XIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
+
 export function ProfileTemplate({ member }: { member: MemberData }) {
   const searchParams = useSearchParams();
   const sourceParam = searchParams.get('src') || 'direct-link';
@@ -131,12 +137,40 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
     return () => ctx.revert();
   }, []);
 
-  const socialLinks = [
-    { name: 'LinkedIn', url: member.linkedin, icon: LinkedinIcon, tag: 'PROFESSIONAL NETWORK' },
-    { name: 'Instagram', url: member.instagram, icon: InstagramIcon, tag: 'VISUAL JOURNAL' },
-    { name: 'GitHub', url: member.github, icon: GithubIcon, tag: 'CODE BASE' },
-    { name: 'Portfolio', url: member.portfolio, icon: GlobeIcon, tag: 'PERSONAL ARCHIVE' },
-  ].filter((item) => Boolean(item.url));
+  const socialLinks = React.useMemo(() => {
+    return [
+      {
+        name: 'LinkedIn',
+        url: member.linkedin || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(member.name + ' TEDxGCEM')}`,
+        icon: LinkedinIcon,
+        tag: member.linkedin ? 'PROFESSIONAL NETWORK' : 'SEARCH ON LINKEDIN',
+      },
+      {
+        name: 'Instagram',
+        url: member.instagram || `https://www.instagram.com/tedxgcem/`,
+        icon: InstagramIcon,
+        tag: member.instagram ? 'VISUAL JOURNAL' : 'TEDxGCEM INSTAGRAM',
+      },
+      {
+        name: 'X (Twitter)',
+        url: `https://x.com/search?q=${encodeURIComponent(member.name + ' TEDxGCEM')}`,
+        icon: XIcon,
+        tag: 'SOCIAL STREAM',
+      },
+      {
+        name: 'GitHub',
+        url: member.github || `https://github.com/search?q=${encodeURIComponent(member.name)}`,
+        icon: GithubIcon,
+        tag: member.github ? 'CODE ARCHIVE' : 'SEARCH ON GITHUB',
+      },
+      {
+        name: 'Portfolio',
+        url: member.portfolio || `https://tedxteam.nivet2006.in/team/${member.slug}`,
+        icon: GlobeIcon,
+        tag: member.portfolio ? 'PERSONAL WEBSITE' : 'TEDxGCEM IDENTITY PAGE',
+      },
+    ];
+  }, [member]);
 
   return (
     <ThemeProvider team={member.team}>

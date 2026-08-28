@@ -150,13 +150,15 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
 
         {/* Minimal Luxury Header */}
         <header className="fixed top-0 left-0 right-0 z-50 mix-blend-difference bg-black/40 backdrop-blur-md border-b border-white/5 px-6 sm:px-12 py-5 flex items-center justify-between">
-          <Link href="/" className="group flex items-center gap-2">
-            <span className="font-extrabold tracking-tighter text-lg text-white">
-              TED<span className="text-[#EB0028]">x</span>
-            </span>
-            <span className="text-xs font-light uppercase tracking-[0.25em] text-neutral-400 border-l border-white/20 pl-2">
-              GCEM
-            </span>
+          <Link href="/" className="group flex items-center">
+            <Image
+              src="/tedxgcem.png"
+              alt="TEDxGCEM Logo"
+              width={152}
+              height={43}
+              priority
+              className="h-7 w-auto object-contain transition-opacity duration-300 group-hover:opacity-90"
+            />
           </Link>
 
           <Link

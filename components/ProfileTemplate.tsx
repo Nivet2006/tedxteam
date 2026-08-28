@@ -7,9 +7,8 @@ import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowLeft, Sparkles, UserCheck } from 'lucide-react';
+import { ArrowUpRight, ArrowLeft } from 'lucide-react';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import { SocialLinks } from '@/components/SocialLinks';
 import { getTeamTheme } from '@/lib/themes';
 
 if (typeof window !== 'undefined') {
@@ -45,14 +44,56 @@ function getValidPhotoUrl(url?: string | null): string {
   return FALLBACK_PHOTO;
 }
 
+// Split full name intelligently for editorial typography
+function formatName(name: string): { first: string; rest: string } {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) {
+    return { first: parts[0], rest: '' };
+  }
+  return {
+    first: parts[0],
+    rest: parts.slice(1).join(' '),
+  };
+}
+
+const LinkedinIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.7a1.6 1.6 0 1 0 1.6 1.6c0-.88-.72-1.6-1.6-1.6Z" />
+  </svg>
+);
+
+const InstagramIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069ZM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0Zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324ZM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881Z" />
+  </svg>
+);
+
+const GithubIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z" />
+  </svg>
+);
+
+const GlobeIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    <path d="M2 12h20" />
+  </svg>
+);
+
 export function ProfileTemplate({ member }: { member: MemberData }) {
   const searchParams = useSearchParams();
   const sourceParam = searchParams.get('src') || 'direct-link';
   const theme = getTeamTheme(member.team);
 
   const [imageSrc, setImageSrc] = useState(() => getValidPhotoUrl(member.photoUrl));
-  const photoRef = useRef<HTMLDivElement>(null);
-  const sectionsRef = useRef<HTMLDivElement>(null);
+  const photoContainerRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  const nameFormatted = React.useMemo(() => {
+    return formatName(member.name);
+  }, [member.name]);
 
   let parsedInterests: string[] = [];
   try {
@@ -63,24 +104,26 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
     parsedInterests = [];
   }
 
+  // Scan tracking request
   useEffect(() => {
     fetch(`/api/track-scan/${member.slug}?src=${encodeURIComponent(sourceParam)}`, {
       method: 'POST',
     }).catch((err) => console.error('Scan tracking fetch error:', err));
   }, [member.slug, sourceParam]);
 
+  // GSAP subtle parallax effect on member portrait
   useEffect(() => {
-    if (!photoRef.current) return;
+    if (!photoContainerRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.to(photoRef.current, {
-        yPercent: 10,
+      gsap.to(photoContainerRef.current, {
+        yPercent: 8,
         ease: 'none',
         scrollTrigger: {
-          trigger: photoRef.current,
+          trigger: photoContainerRef.current,
           start: 'top top',
           end: 'bottom top',
-          scrub: true,
+          scrub: 1,
         },
       });
     });
@@ -88,203 +131,422 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
     return () => ctx.revert();
   }, []);
 
+  const socialLinks = [
+    { name: 'LinkedIn', url: member.linkedin, icon: LinkedinIcon, tag: 'PROFESSIONAL NETWORK' },
+    { name: 'Instagram', url: member.instagram, icon: InstagramIcon, tag: 'VISUAL JOURNAL' },
+    { name: 'GitHub', url: member.github, icon: GithubIcon, tag: 'CODE BASE' },
+    { name: 'Portfolio', url: member.portfolio, icon: GlobeIcon, tag: 'PERSONAL ARCHIVE' },
+  ].filter((item) => Boolean(item.url));
+
   return (
     <ThemeProvider team={member.team}>
-      <div className="relative min-h-screen overflow-x-hidden selection:bg-red-500 selection:text-white">
+      <div className="relative min-h-screen bg-[#07070A] text-neutral-100 selection:bg-[#EB0028] selection:text-white bg-grain bg-architectural-grid font-sans-editorial overflow-x-hidden">
+        
+        {/* Subtle Atmospheric Glow */}
         <div
-          className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full blur-[140px] opacity-25"
+          className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 h-[700px] w-[90vw] max-w-[1200px] rounded-full blur-[160px] opacity-15 z-0"
           style={{ backgroundColor: theme.accentColor }}
         />
 
-        {/* Sticky Floating Back Button */}
-        <div className="fixed top-4 left-4 z-50 sm:top-5 sm:left-5">
+        {/* Minimal Luxury Header */}
+        <header className="fixed top-0 left-0 right-0 z-50 mix-blend-difference bg-black/40 backdrop-blur-md border-b border-white/5 px-6 sm:px-12 py-5 flex items-center justify-between">
+          <Link href="/" className="group flex items-center gap-2">
+            <span className="font-extrabold tracking-tighter text-lg text-white">
+              TED<span className="text-[#EB0028]">x</span>
+            </span>
+            <span className="text-xs font-light uppercase tracking-[0.25em] text-neutral-400 border-l border-white/20 pl-2">
+              GCEM
+            </span>
+          </Link>
+
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-3.5 py-2 text-xs font-semibold text-white shadow-lg backdrop-blur-xl transition-all hover:border-white/40 hover:bg-white/10 active:scale-95"
+            className="group flex items-center gap-2 text-[11px] font-medium tracking-[0.2em] uppercase text-neutral-400 hover:text-white transition-colors duration-300"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Back</span>
+            <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-300 group-hover:-translate-x-1" />
+            <span>BACK TO TEAM</span>
           </Link>
-        </div>
+        </header>
 
-        {/* Profile Body */}
-        <main className="mx-auto max-w-5xl px-4 sm:px-6 py-8 sm:py-16">
-          <div className="grid gap-8 sm:gap-12 lg:grid-cols-12 lg:items-center">
-            {/* Photo Container */}
-            <div className="lg:col-span-5 w-full max-w-[360px] mx-auto lg:max-w-none">
+        {/* SECTION 1: HERO — CINEMATIC FULL-SCREEN INTRODUCTION */}
+        <section ref={heroRef} className="relative min-h-screen pt-28 pb-16 sm:pt-36 sm:pb-24 px-6 sm:px-12 lg:px-20 flex flex-col justify-between z-10">
+          {/* Micro Top Details */}
+          <div className="flex flex-wrap items-center justify-between border-b border-white/10 pb-4 mb-8 text-[11px] font-mono tracking-[0.25em] uppercase text-neutral-400">
+            <div className="flex items-center gap-3">
+              <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.accentColor }} />
+              <span>TEDxGCEM / 2026 EDITION</span>
+            </div>
+            <div className="flex items-center gap-6">
+              <span className="hidden sm:inline" style={{ color: theme.accentColor }}>
+                TEAM: {member.team.toUpperCase()}
+              </span>
+              <span>01 / 04</span>
+            </div>
+          </div>
+
+          {/* Asymmetrical Editorial Composition */}
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end my-auto">
+            {/* Left Column: Name & Metadata */}
+            <div className="lg:col-span-7 flex flex-col justify-end order-2 lg:order-1">
               <motion.div
-                initial={{ opacity: 0, scale: 0.94 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative overflow-hidden rounded-3xl border p-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
-                style={{
-                  borderColor: theme.borderColor,
-                  backgroundColor: theme.cardBg,
-                }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               >
-                {/* Glass sheen highlight */}
-                <div className="pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-br from-white/15 via-transparent to-transparent opacity-70" />
+                {/* Role Pill */}
+                <div className="inline-flex items-center gap-2 mb-6 border border-white/15 px-3.5 py-1.5 rounded-full bg-white/[0.03]">
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: theme.accentColor }} />
+                  <span className="text-xs uppercase tracking-[0.2em] font-medium text-neutral-300">
+                    {member.role}
+                  </span>
+                </div>
 
-                <div ref={photoRef} className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-white/10 shadow-inner">
+                {/* Oversized Name Typography */}
+                <h1 className="font-serif-editorial font-light uppercase tracking-tight text-white leading-[0.88] text-[clamp(3.2rem,8.5vw,9.5rem)] text-balance">
+                  <span className="block font-normal">{nameFormatted.first}</span>
+                  {nameFormatted.rest && (
+                    <span className="block text-neutral-400 font-extralight italic">
+                      {nameFormatted.rest}
+                    </span>
+                  )}
+                </h1>
+
+                {/* Sub-line meta */}
+                <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs font-mono tracking-widest text-neutral-400 uppercase">
+                  <span>FEATURED PERSONALITY</span>
+                  <span className="text-neutral-500">TEDxGCEM CREATIVE ARCHIVE</span>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Column: Editorial Portrait Frame */}
+            <div className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="relative w-full max-w-[420px] aspect-[3/4]"
+              >
+                {/* Outer offset hairline box */}
+                <div className="absolute -inset-3 border border-white/10 rounded-sm pointer-events-none" />
+
+                {/* Main Photo Frame */}
+                <div
+                  ref={photoContainerRef}
+                  className="relative w-full h-full overflow-hidden rounded-sm border border-white/15 shadow-2xl bg-neutral-900 group"
+                >
                   <Image
                     src={imageSrc}
                     alt={member.name}
                     fill
                     priority
                     onError={() => setImageSrc(FALLBACK_PHOTO)}
-                    sizes="(max-width: 768px) 90vw, 40vw"
-                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 768px) 95vw, 40vw"
+                    className="object-cover object-center grayscale hover:grayscale-0 transition-all duration-1000 ease-out group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
 
-                <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between z-10">
-                  <span
-                    className={`inline-block rounded-full border px-3 py-1 text-[11px] uppercase tracking-wider backdrop-blur-md ${theme.badgeStyle}`}
-                  >
-                    {theme.name}
-                  </span>
-                  <span className="flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-[11px] text-gray-300 backdrop-blur-md border border-white/10">
-                    <UserCheck className="h-3.5 w-3.5 text-[#EB0028]" />
-                    <span>TEDxGCEM 2026</span>
-                  </span>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Member Details */}
-            <div className="lg:col-span-7 flex flex-col justify-center text-center lg:text-left">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                <div className="flex items-center justify-center lg:justify-start gap-2 mb-3">
-                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: theme.accentColor }} />
-                  <span className="text-xs sm:text-sm font-semibold uppercase tracking-widest" style={{ color: theme.accentColor }}>
-                    {member.role}
-                  </span>
-                </div>
-
-                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white break-words">
-                  {member.name}
-                </h1>
-
-                <p className="mt-4 sm:mt-6 text-lg sm:text-xl leading-relaxed text-gray-300 font-light border-l-0 lg:border-l-2 lg:pl-4" style={{ borderColor: theme.accentColor }}>
-                  &ldquo;{member.oneLiner}&rdquo;
-                </p>
-
-                <div className="mt-6 sm:mt-8 flex justify-center lg:justify-start">
-                  <SocialLinks
-                    linkedin={member.linkedin}
-                    instagram={member.instagram}
-                    github={member.github}
-                    portfolio={member.portfolio}
-                    theme={theme}
-                  />
+                  {/* Corner Accent Badge */}
+                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[10px] font-mono tracking-widest uppercase text-white/80">
+                    <span className="bg-black/60 backdrop-blur-md px-2.5 py-1 border border-white/10">
+                      {member.team}
+                    </span>
+                    <span className="text-[#EB0028]">● 2026</span>
+                  </div>
                 </div>
               </motion.div>
             </div>
           </div>
 
-          <div ref={sectionsRef} className="mt-12 sm:mt-16 grid gap-6 sm:gap-8 grid-cols-1 lg:grid-cols-2">
-            <motion.section
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="rounded-3xl border p-6 sm:p-8 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]"
-              style={{
-                borderColor: theme.borderColor,
-                backgroundColor: theme.cardBg,
-              }}
-            >
-              <h2 className="flex items-center gap-3 text-lg sm:text-xl font-bold text-white mb-4">
-                <span className="h-6 w-1 rounded-full" style={{ backgroundColor: theme.accentColor }} />
-                About Me
-              </h2>
-              <p className="leading-relaxed text-gray-300 whitespace-pre-line text-sm sm:text-base font-normal break-words">
-                {member.bio}
-              </p>
-            </motion.section>
+          {/* Scroll Down Indicator */}
+          <div className="pt-12 flex items-center justify-between text-[10px] font-mono tracking-[0.3em] uppercase text-neutral-400 border-t border-white/10">
+            <span>SCROLL TO DISCOVER</span>
+            <div className="w-12 h-px bg-white/20" />
+          </div>
+        </section>
 
-            <motion.section
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="rounded-3xl border p-6 sm:p-8 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]"
-              style={{
-                borderColor: theme.borderColor,
-                backgroundColor: theme.cardBg,
-              }}
-            >
-              <h2 className="flex items-center gap-3 text-lg sm:text-xl font-bold text-white mb-4">
-                <span className="h-6 w-1 rounded-full bg-[#EB0028]" />
-                My Role at TEDx
-              </h2>
-              <p className="leading-relaxed text-gray-300 whitespace-pre-line text-sm sm:text-base font-normal break-words">
-                {member.contribution}
-              </p>
-            </motion.section>
-
-            {parsedInterests.length > 0 && (
-              <motion.section
+        {/* SECTION 2: EDITORIAL QUOTE / ONE-LINER */}
+        {member.oneLiner && (
+          <section className="relative py-24 sm:py-32 px-6 sm:px-12 lg:px-20 border-t border-white/10 z-10">
+            <div className="max-w-5xl mx-auto">
+              <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="grid-cols-1 lg:col-span-2 rounded-3xl border p-6 sm:p-8 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]"
-                style={{
-                  borderColor: theme.borderColor,
-                  backgroundColor: theme.cardBg,
-                }}
+                transition={{ duration: 0.8 }}
+                className="relative text-center sm:text-left"
               >
-                <h2 className="flex items-center gap-3 text-lg sm:text-xl font-bold text-white mb-4">
-                  <Sparkles className="h-5 w-5" style={{ color: theme.accentColor }} />
-                  Beyond TEDx
+                <span
+                  className="block font-serif-editorial text-7xl sm:text-9xl leading-none select-none opacity-20 mb-[-2rem]"
+                  style={{ color: theme.accentColor }}
+                >
+                  “
+                </span>
+                <h2 className="font-serif-editorial text-2xl sm:text-4xl md:text-5xl font-light text-neutral-100 leading-tight tracking-wide italic">
+                  {member.oneLiner}
                 </h2>
-                <div className="flex flex-wrap gap-2.5">
-                  {parsedInterests.map((interest, idx) => (
-                    <span
-                      key={idx}
-                      className="rounded-full border px-3.5 py-1.5 text-xs sm:text-sm font-medium transition-transform hover:scale-105 backdrop-blur-md"
-                      style={{
-                        borderColor: theme.borderColor,
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        color: theme.textColor,
-                      }}
-                    >
-                      {interest}
-                    </span>
-                  ))}
+                <div className="mt-8 flex items-center gap-4 sm:justify-start justify-center">
+                  <div className="w-10 h-px" style={{ backgroundColor: theme.accentColor }} />
+                  <span className="text-xs font-mono tracking-[0.25em] uppercase text-neutral-400">
+                    PERSPECTIVE
+                  </span>
                 </div>
-              </motion.section>
-            )}
-          </div>
-        </main>
+              </motion.div>
+            </div>
+          </section>
+        )}
 
-        <footer className="mt-16 border-t border-white/10 bg-black/60 px-4 sm:px-6 py-8 backdrop-blur-xl text-center text-xs sm:text-sm text-gray-400">
-          <div className="mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Image
-                src="/tedxgcem.png"
-                alt="TEDxGCEM Logo"
-                width={133}
-                height={38}
-                className="h-[25px] w-auto object-contain opacity-80"
-              />
-              <span className="text-gray-500">— Ideas Worth Spreading</span>
+        {/* SECTION 3: ABOUT (BIOGRAPHY) */}
+        <section className="relative py-24 sm:py-32 px-6 sm:px-12 lg:px-20 border-t border-white/10 z-10">
+          <div className="max-w-6xl mx-auto grid lg:grid-cols-12 gap-12 sm:gap-16">
+            {/* Left Header Column */}
+            <div className="lg:col-span-4">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="sticky top-28"
+              >
+                <span className="font-serif-editorial text-6xl sm:text-7xl font-extralight text-neutral-700 block mb-2">
+                  01
+                </span>
+                <h3 className="text-xs font-mono tracking-[0.3em] uppercase text-[#EB0028] mb-3">
+                  // BIOGRAPHY
+                </h3>
+                <h2 className="font-serif-editorial text-3xl sm:text-4xl text-white font-normal uppercase tracking-wider">
+                  ABOUT
+                </h2>
+                <p className="mt-4 text-xs font-mono tracking-widest text-neutral-500 uppercase">
+                  A SHORT INTRODUCTION
+                </p>
+              </motion.div>
             </div>
 
-            <Link
-              href="/"
-              className="text-xs uppercase tracking-widest text-gray-400 hover:text-white transition-colors underline decoration-dotted underline-offset-4"
-            >
-              Explore Full Team Directory
-            </Link>
+            {/* Right Content Column */}
+            <div className="lg:col-span-8">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="prose prose-invert max-w-none"
+              >
+                <p className="text-lg sm:text-xl lg:text-2xl leading-relaxed text-neutral-300 font-light whitespace-pre-line tracking-wide">
+                  {member.bio}
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 4: CONTRIBUTION TO TEDx */}
+        <section className="relative py-24 sm:py-32 px-6 sm:px-12 lg:px-20 border-t border-white/10 z-10 bg-white/[0.01]">
+          <div className="max-w-6xl mx-auto grid lg:grid-cols-12 gap-12 sm:gap-16">
+            {/* Left Header Column */}
+            <div className="lg:col-span-4">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="sticky top-28"
+              >
+                <span className="font-serif-editorial text-6xl sm:text-7xl font-extralight text-neutral-700 block mb-2">
+                  02
+                </span>
+                <h3 className="text-xs font-mono tracking-[0.3em] uppercase text-[#EB0028] mb-3">
+                  // ROLE & IMPACT
+                </h3>
+                <h2 className="font-serif-editorial text-3xl sm:text-4xl text-white font-normal uppercase tracking-wider">
+                  CONTRIBUTION
+                </h2>
+                <p className="mt-4 text-xs font-mono tracking-widest text-neutral-500 uppercase">
+                  WHAT I BRING TO TEDxGCEM
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Right Content Column */}
+            <div className="lg:col-span-8">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="border-l border-white/10 pl-6 sm:pl-10 py-2"
+                style={{ borderColor: theme.accentColor }}
+              >
+                <p className="text-lg sm:text-xl lg:text-2xl leading-relaxed text-neutral-300 font-light whitespace-pre-line tracking-wide">
+                  {member.contribution}
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 5: BEYOND TEDx (INTERESTS) */}
+        {parsedInterests.length > 0 && (
+          <section className="relative py-24 sm:py-32 px-6 sm:px-12 lg:px-20 border-t border-white/10 z-10">
+            <div className="max-w-6xl mx-auto grid lg:grid-cols-12 gap-12 sm:gap-16">
+              {/* Left Header Column */}
+              <div className="lg:col-span-4">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  className="sticky top-28"
+                >
+                  <span className="font-serif-editorial text-6xl sm:text-7xl font-extralight text-neutral-700 block mb-2">
+                    03
+                  </span>
+                  <h3 className="text-xs font-mono tracking-[0.3em] uppercase text-[#EB0028] mb-3">
+                    // PASSIONS & DISCIPLINE
+                  </h3>
+                  <h2 className="font-serif-editorial text-3xl sm:text-4xl text-white font-normal uppercase tracking-wider">
+                    BEYOND TEDx
+                  </h2>
+                  <p className="mt-4 text-xs font-mono tracking-widest text-neutral-500 uppercase">
+                    AREAS OF EXPLORATION
+                  </p>
+                </motion.div>
+              </div>
+
+              {/* Right Interactive List Column */}
+              <div className="lg:col-span-8">
+                <div className="divide-y divide-white/10 border-t border-b border-white/10">
+                  {parsedInterests.map((interest, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 15 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: idx * 0.08 }}
+                      className="group py-6 sm:py-8 flex items-center justify-between transition-colors duration-300 hover:px-4"
+                    >
+                      <div className="flex items-center gap-6">
+                        <span className="font-mono text-xs text-neutral-500 group-hover:text-[#EB0028] transition-colors">
+                          0{idx + 1}
+                        </span>
+                        <span className="font-serif-editorial text-xl sm:text-3xl text-neutral-200 group-hover:text-white transition-colors tracking-wide">
+                          {interest}
+                        </span>
+                      </div>
+                      <ArrowUpRight className="w-5 h-5 text-neutral-600 transition-all duration-300 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1" />
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* SECTION 6: CONNECT / SOCIAL LINKS */}
+        <section className="relative py-24 sm:py-32 px-6 sm:px-12 lg:px-20 border-t border-white/10 z-10 bg-white/[0.01]">
+          <div className="max-w-6xl mx-auto grid lg:grid-cols-12 gap-12 sm:gap-16">
+            {/* Left Header Column */}
+            <div className="lg:col-span-4">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="sticky top-28"
+              >
+                <span className="font-serif-editorial text-6xl sm:text-7xl font-extralight text-neutral-700 block mb-2">
+                  04
+                </span>
+                <h3 className="text-xs font-mono tracking-[0.3em] uppercase text-[#EB0028] mb-3">
+                  // CONNECT
+                </h3>
+                <h2 className="font-serif-editorial text-3xl sm:text-4xl text-white font-normal uppercase tracking-wider">
+                  LET&apos;S CONNECT
+                </h2>
+                <p className="mt-4 text-xs font-mono tracking-widest text-neutral-500 uppercase">
+                  DIRECT CHANNELS
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Right Social Rows Column */}
+            <div className="lg:col-span-8">
+              {socialLinks.length > 0 ? (
+                <div className="divide-y divide-white/10 border-t border-b border-white/10">
+                  {socialLinks.map((link) => {
+                    const Icon = link.icon;
+                    return (
+                      <motion.a
+                        key={link.name}
+                        href={link.url!}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5 }}
+                        className="group py-6 sm:py-8 flex items-center justify-between transition-all duration-300 hover:bg-white/[0.02] sm:px-6"
+                      >
+                        <div className="flex items-center gap-5">
+                          <Icon className="w-5 h-5 text-neutral-400 group-hover:text-[#EB0028] transition-colors" />
+                          <div>
+                            <span className="font-serif-editorial text-2xl sm:text-3xl text-neutral-200 group-hover:text-white transition-colors tracking-wide block">
+                              {link.name}
+                            </span>
+                            <span className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">
+                              {link.tag}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-neutral-400 group-hover:text-white transition-colors">
+                          <span className="hidden sm:inline uppercase">VISIT</span>
+                          <ArrowUpRight className="w-5 h-5 text-neutral-500 group-hover:text-white transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                        </div>
+                      </motion.a>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-neutral-500 italic text-sm py-6">
+                  No public social channels listed.
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* LUXURY EDITORIAL FOOTER */}
+        <footer className="relative border-t border-white/10 bg-black/60 px-6 sm:px-12 py-16 backdrop-blur-xl z-10">
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="font-extrabold tracking-tighter text-2xl text-white">
+                  TED<span className="text-[#EB0028]">x</span>
+                </span>
+                <span className="text-sm font-light uppercase tracking-[0.25em] text-neutral-400 border-l border-white/20 pl-2">
+                  GCEM
+                </span>
+              </div>
+              <p className="text-xs font-mono tracking-[0.2em] text-neutral-400 uppercase">
+                IDEAS WORTH SPREADING.
+              </p>
+            </div>
+
+            <div className="flex flex-col md:items-end gap-3">
+              <Link
+                href="/"
+                className="group inline-flex items-center gap-2 text-xs font-mono tracking-[0.2em] uppercase text-neutral-300 hover:text-white transition-colors"
+              >
+                <span>EXPLORE FULL TEAM DIRECTORY</span>
+                <ArrowUpRight className="w-4 h-4 text-[#EB0028] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+              <p className="text-[11px] text-neutral-500 font-mono tracking-wider">
+                © 2026 TEDxGCEM. ALL RIGHTS RESERVED.
+              </p>
+            </div>
           </div>
         </footer>
+
       </div>
     </ThemeProvider>
   );

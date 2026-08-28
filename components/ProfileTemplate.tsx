@@ -138,36 +138,32 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
   }, []);
 
   const socialLinks = React.useMemo(() => {
+    const isNived = member.slug === 'nived-shaji';
     return [
       {
         name: 'LinkedIn',
-        url: member.linkedin || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(member.name + ' TEDxGCEM')}`,
+        url: member.linkedin || (isNived ? 'https://www.linkedin.com/in/nivet2006/' : `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(member.name + ' TEDxGCEM')}`),
         icon: LinkedinIcon,
-        tag: member.linkedin ? 'PROFESSIONAL NETWORK' : 'SEARCH ON LINKEDIN',
       },
       {
         name: 'Instagram',
-        url: member.instagram || `https://www.instagram.com/tedxgcem/`,
+        url: member.instagram || (isNived ? 'https://www.instagram.com/nivet.2006' : 'https://www.instagram.com/tedxgcem/'),
         icon: InstagramIcon,
-        tag: member.instagram ? 'VISUAL JOURNAL' : 'TEDxGCEM INSTAGRAM',
       },
       {
         name: 'X (Twitter)',
         url: `https://x.com/search?q=${encodeURIComponent(member.name + ' TEDxGCEM')}`,
         icon: XIcon,
-        tag: 'SOCIAL STREAM',
       },
       {
         name: 'GitHub',
-        url: member.github || (member.slug === 'nived-shaji' ? 'https://github.com/Nivet2006' : `https://github.com/search?q=${encodeURIComponent(member.name)}`),
+        url: member.github || (isNived ? 'https://github.com/Nivet2006' : `https://github.com/search?q=${encodeURIComponent(member.name)}`),
         icon: GithubIcon,
-        tag: member.github || member.slug === 'nived-shaji' ? 'CODE ARCHIVE' : 'SEARCH ON GITHUB',
       },
       {
         name: 'Portfolio',
-        url: member.portfolio || `https://tedxteam.nivet2006.in/team/${member.slug}`,
+        url: member.portfolio || (isNived ? 'https://nivet2006.in/' : `https://tedxteam.nivet2006.in/team/${member.slug}`),
         icon: GlobeIcon,
-        tag: member.portfolio ? 'PERSONAL WEBSITE' : 'TEDxGCEM IDENTITY PAGE',
       },
     ];
   }, [member]);
@@ -505,48 +501,34 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
               </motion.div>
             </div>
 
-            {/* Right Social Rows Column */}
+            {/* Right Social Logo Buttons Column */}
             <div className="lg:col-span-8">
-              {socialLinks.length > 0 ? (
-                <div className="divide-y divide-white/10 border-t border-b border-white/10">
-                  {socialLinks.map((link) => {
-                    const Icon = link.icon;
-                    return (
-                      <motion.a
-                        key={link.name}
-                        href={link.url!}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        initial={{ opacity: 0, y: 15 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5 }}
-                        className="group py-6 sm:py-8 flex items-center justify-between transition-all duration-300 hover:bg-white/[0.02] sm:px-6"
-                      >
-                        <div className="flex items-center gap-5">
-                          <Icon className="w-5 h-5 text-neutral-400 group-hover:text-[#EB0028] transition-colors" />
-                          <div>
-                            <span className="font-serif-editorial text-2xl sm:text-3xl text-neutral-200 group-hover:text-white transition-colors tracking-wide block">
-                              {link.name}
-                            </span>
-                            <span className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">
-                              {link.tag}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-neutral-400 group-hover:text-white transition-colors">
-                          <span className="hidden sm:inline uppercase">VISIT</span>
-                          <ArrowUpRight className="w-5 h-5 text-neutral-500 group-hover:text-white transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                        </div>
-                      </motion.a>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="text-neutral-500 italic text-sm py-6">
-                  No public social channels listed.
-                </p>
-              )}
+              <div className="flex flex-wrap gap-4 sm:gap-5">
+                {socialLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <motion.a
+                      key={link.name}
+                      href={link.url!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      initial={{ opacity: 0, y: 15 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      whileHover={{ y: -3, scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ duration: 0.3 }}
+                      className="group relative flex items-center gap-3.5 border border-white/10 hover:border-white/30 bg-white/[0.03] hover:bg-white/[0.08] px-5 py-3.5 rounded-xl transition-all duration-300 backdrop-blur-md shadow-lg"
+                    >
+                      <Icon className="w-5 h-5 text-neutral-300 group-hover:text-[#EB0028] transition-colors" />
+                      <span className="font-serif-editorial text-lg sm:text-xl text-neutral-200 group-hover:text-white transition-colors tracking-wide">
+                        {link.name}
+                      </span>
+                      <ArrowUpRight className="w-4 h-4 text-neutral-500 group-hover:text-white transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ml-1" />
+                    </motion.a>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </section>

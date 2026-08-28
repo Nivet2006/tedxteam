@@ -517,36 +517,22 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
           </div>
         </section>
 
-        {/* LUXURY EDITORIAL FOOTER */}
-        <footer className="relative border-t border-white/10 bg-black/60 px-6 sm:px-12 py-16 backdrop-blur-xl z-10">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
-            <div>
-              <div className="mb-3">
-                <Image
-                  src="/tedxgcem.png"
-                  alt="TEDxGCEM Logo"
-                  width={152}
-                  height={43}
-                  className="h-8 w-auto object-contain opacity-90"
-                />
-              </div>
-              <p className="text-xs font-mono tracking-[0.2em] text-neutral-400 uppercase">
-                IDEAS WORTH SPREADING.
-              </p>
+        {/* Global Footer (Matches Homepage Directory) */}
+        <footer className="relative border-t border-white/10 bg-black/80 px-4 sm:px-6 py-8 backdrop-blur-md text-center text-xs text-gray-400 z-10">
+          <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <Image
+                src="/tedxgcem.png"
+                alt="TEDxGCEM"
+                width={133}
+                height={38}
+                className="h-[25px] w-auto object-contain opacity-80"
+              />
+              <span className="text-gray-500">— Independent TED event</span>
             </div>
-
-            <div className="flex flex-col md:items-end gap-3">
-              <Link
-                href="/"
-                className="group inline-flex items-center gap-2 text-xs font-mono tracking-[0.2em] uppercase text-neutral-300 hover:text-white transition-colors"
-              >
-                <span>EXPLORE FULL TEAM DIRECTORY</span>
-                <ArrowUpRight className="w-4 h-4 text-[#EB0028] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
-              <p className="text-[11px] text-neutral-500 font-mono tracking-wider">
-                © 2026 TEDxGCEM. ALL RIGHTS RESERVED.
-              </p>
-            </div>
+            <p className="text-gray-500 text-[11px] sm:text-xs">
+              |||••||
+            </p>
           </div>
         </footer>
 

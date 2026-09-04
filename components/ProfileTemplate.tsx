@@ -139,10 +139,17 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
 
   const socialLinks = React.useMemo(() => {
     const isNived = member.slug === 'nived-shaji';
+    const isVyshnavi = member.slug === 'vyshnavi-d';
+    const isShivaprasad = member.slug === 'shivaprasad-patil';
+    const isCharan = member.slug === 'charan-kumar-reddy';
+    const isDivyashree = member.slug === 'divyashree-rm';
+    const isVinayaka = member.slug === 'vinayaka';
+    const isBushra = member.slug === 'bushra-m';
+    const isHimasree = member.slug === 'challa-himasree';
     return [
       {
         name: 'LinkedIn',
-        url: member.linkedin || (isNived ? 'https://www.linkedin.com/in/nivet2006/' : `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(member.name + ' TEDxGCEM')}`),
+        url: member.linkedin || (isNived ? 'https://www.linkedin.com/in/nivet2006/' : isVyshnavi ? 'https://www.linkedin.com/in/vyshnavid110623/' : isShivaprasad ? 'https://www.linkedin.com/in/shivaprasad-v-patil-629259326' : isCharan ? 'https://www.linkedin.com/in/chintaparthi-charan-kumar-reddy-255b57295' : isDivyashree ? 'https://www.linkedin.com/in/divyashree-rm' : isVinayaka ? 'https://www.linkedin.com/in/vinayaka464' : isBushra ? 'https://www.linkedin.com/in/bushra-makandar-a010a3364/' : isHimasree ? 'https://www.linkedin.com/in/challa-himasree-935b51335' : `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(member.name + ' TEDxGCEM')}`),
         icon: LinkedinIcon,
       },
       {

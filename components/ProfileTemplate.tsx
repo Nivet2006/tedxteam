@@ -30,6 +30,7 @@ export interface MemberData {
   instagram?: string | null;
   github?: string | null;
   portfolio?: string | null;
+  email?: string | null;
   scanCount: number;
 }
 
@@ -85,6 +86,13 @@ const GlobeIcon = ({ className }: { className?: string }) => (
 const XIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
+
+const MailIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <rect width="20" height="16" x="2" y="4" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
   </svg>
 );
 
@@ -146,10 +154,20 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
     const isVinayaka = member.slug === 'vinayaka';
     const isBushra = member.slug === 'bushra-m';
     const isHimasree = member.slug === 'challa-himasree';
+    const isBhargav = member.slug === 'bhargav-bhat';
+    const isDivyaC = member.slug === 'divya-c';
+    const isTaruni = member.slug === 'taruni-sri-reddy';
+    const isAkhila = member.slug === 'akhila-g';
+    const isSagar = member.slug === 'sagar-singh';
+    const isAnusha = member.slug === 'anusha';
+    const isBhuvana = member.slug === 'bhuvana-m';
+    const isMeghana = member.slug === 'meghana-mallarapu';
+    const isSpoorthi = member.slug === 'spoorthi-n';
+    const isRitkriti = member.slug === 'riktriti';
     return [
       {
         name: 'LinkedIn',
-        url: member.linkedin || (isNived ? 'https://www.linkedin.com/in/nivet2006/' : isVyshnavi ? 'https://www.linkedin.com/in/vyshnavid110623/' : isShivaprasad ? 'https://www.linkedin.com/in/shivaprasad-v-patil-629259326' : isCharan ? 'https://www.linkedin.com/in/chintaparthi-charan-kumar-reddy-255b57295' : isDivyashree ? 'https://www.linkedin.com/in/divyashree-rm' : isVinayaka ? 'https://www.linkedin.com/in/vinayaka464' : isBushra ? 'https://www.linkedin.com/in/bushra-makandar-a010a3364/' : isHimasree ? 'https://www.linkedin.com/in/challa-himasree-935b51335' : `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(member.name + ' TEDxGCEM')}`),
+        url: member.linkedin || (isNived ? 'https://www.linkedin.com/in/nivet2006/' : isVyshnavi ? 'https://www.linkedin.com/in/vyshnavid110623/' : isShivaprasad ? 'https://www.linkedin.com/in/shivaprasad-v-patil-629259326' : isCharan ? 'https://www.linkedin.com/in/chintaparthi-charan-kumar-reddy-255b57295' : isDivyashree ? 'https://www.linkedin.com/in/divyashree-rm' : isVinayaka ? 'https://www.linkedin.com/in/vinayaka464' : isBushra ? 'https://www.linkedin.com/in/bushra-makandar-a010a3364/' : isHimasree ? 'https://www.linkedin.com/in/challa-himasree-935b51335' : isBhargav ? 'https://www.linkedin.com/in/bhargavbhat18' : isDivyaC ? 'https://www.linkedin.com/in/divyachachadi-ise' : isTaruni ? 'https://www.linkedin.com/in/k-taruni-sri-reddy-096415367/' : isAkhila ? 'https://www.linkedin.com/in/akhilaakhi30' : isSagar ? 'https://www.linkedin.com/in/sagar-singh-a60884359' : isAnusha ? 'https://www.linkedin.com/in/anusha-royals-422989335' : isBhuvana ? 'https://in.linkedin.com/in/bhuvanamwork' : isMeghana ? 'https://www.linkedin.com/in/meghana-mallarapu-9211b2400' : isSpoorthi ? 'https://www.linkedin.com/in/spoorthi-n-367465332' : isRitkriti ? 'https://www.linkedin.com/in/ritkriti-j-sharma-1670a9322' : `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(member.name + ' TEDxGCEM')}`),
         icon: LinkedinIcon,
       },
       {
@@ -172,13 +190,54 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
         url: member.portfolio || (isNived ? 'https://nivet2006.in/' : `https://tedxteam.nivet2006.in/team/${member.slug}`),
         icon: GlobeIcon,
       },
+      {
+        name: 'Email',
+        url: member.email
+          ? `mailto:${member.email}`
+          : isVyshnavi
+          ? 'mailto:vyshnavid232006@gmail.com'
+          : isShivaprasad
+          ? 'mailto:shivuprasad193@gmail.com'
+          : isCharan
+          ? 'mailto:charankumaraiml28@gmail.com'
+          : isDivyashree
+          ? 'mailto:divyashree.kjm@gmail.com'
+          : isVinayaka
+          ? 'mailto:vinayakavini464@gmail.com'
+          : isBushra
+          ? 'mailto:bushramakandar9@gmail.com'
+          : isHimasree
+          ? 'mailto:himasree2795@gmail.com'
+          : isBhargav
+          ? 'mailto:bhargavbhathosmane321@gmail.com'
+          : isDivyaC
+          ? 'mailto:chachadidivya@gmail.com'
+          : isTaruni
+          ? 'mailto:ktarunisrireddy6@gmail.com'
+          : isAkhila
+          ? 'mailto:akhilakunnu2005@gmail.com'
+          : isSagar
+          ? 'mailto:sagarsingh.webdev@gmail.com'
+          : isAnusha
+          ? 'mailto:royalsanusha786@gmail.com'
+          : isBhuvana
+          ? 'mailto:bhuvanamwork@gmail.com'
+          : isMeghana
+          ? 'mailto:meghanambng@gmail.com'
+          : isSpoorthi
+          ? 'mailto:nspoorthi1326@gmail.com'
+          : isRitkriti
+          ? 'mailto:onlyritkriti11@gmail.com'
+          : 'mailto:contact@tedxgcem.com',
+        icon: MailIcon,
+      },
     ];
   }, [member]);
 
   return (
     <ThemeProvider team={member.team}>
       <div className="relative min-h-screen bg-[#07070A] text-neutral-100 selection:bg-[#EB0028] selection:text-white bg-grain bg-architectural-grid font-sans-editorial overflow-x-hidden">
-        
+
         {/* Subtle Atmospheric Glow */}
         <div
           className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 h-[700px] w-[90vw] max-w-[1200px] rounded-full blur-[160px] opacity-15 z-0"
@@ -219,7 +278,7 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
               <span className="hidden sm:inline" style={{ color: theme.accentColor }}>
                 TEAM: {member.team.toUpperCase()}
               </span>
-              <span>01 / 04</span>
+              <span>01 / 03</span>
             </div>
           </div>
 
@@ -252,8 +311,8 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
 
                 {/* Sub-line meta */}
                 <div className="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs font-mono tracking-widest text-neutral-400 uppercase">
-                  <span>FEATURED PERSONALITY</span>
-                  <span className="text-neutral-500">TEDxGCEM CREATIVE ARCHIVE</span>
+                  <span>  </span>
+                  <span className="text-neutral-500">  TEDxGCEM TEAM ARCHIVE</span>
                 </div>
               </motion.div>
             </div>
@@ -351,7 +410,7 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
                   01
                 </span>
                 <h3 className="text-xs font-mono tracking-[0.3em] uppercase text-[#EB0028] mb-3">
-                  // BIOGRAPHY
+
                 </h3>
                 <h2 className="font-serif-editorial text-3xl sm:text-4xl text-white font-normal uppercase tracking-wider">
                   ABOUT
@@ -379,10 +438,9 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
           </div>
         </section>
 
-        {/* SECTION 4: CONTRIBUTION TO TEDx */}
+        {/* SECTION 4: CONTRIBUTION TO TEDx (COMMENTED OUT)
         <section className="relative py-24 sm:py-32 px-6 sm:px-12 lg:px-20 border-t border-white/10 z-10 bg-white/[0.01]">
           <div className="max-w-6xl mx-auto grid lg:grid-cols-12 gap-12 sm:gap-16">
-            {/* Left Header Column */}
             <div className="lg:col-span-4">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -406,7 +464,6 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
               </motion.div>
             </div>
 
-            {/* Right Content Column */}
             <div className="lg:col-span-8">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -423,6 +480,7 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
             </div>
           </div>
         </section>
+        */}
 
         {/* SECTION 5: BEYOND TEDx (INTERESTS) */}
         {parsedInterests.length > 0 && (
@@ -438,7 +496,7 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
                   className="sticky top-28"
                 >
                   <span className="font-serif-editorial text-6xl sm:text-7xl font-extralight text-neutral-700 block mb-2">
-                    03
+                    02
                   </span>
                   <h3 className="text-xs font-mono tracking-[0.3em] uppercase text-[#EB0028] mb-3">
                     // PASSIONS & DISCIPLINE
@@ -494,7 +552,7 @@ export function ProfileTemplate({ member }: { member: MemberData }) {
                 className="sticky top-28"
               >
                 <span className="font-serif-editorial text-6xl sm:text-7xl font-extralight text-neutral-700 block mb-2">
-                  04
+                  03
                 </span>
                 <h3 className="text-xs font-mono tracking-[0.3em] uppercase text-[#EB0028] mb-3">
                   // CONNECT

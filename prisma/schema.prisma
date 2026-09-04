@@ -30,6 +30,7 @@ model Member {
   instagram    String?
   github       String?
   portfolio    String?
+  email        String?
   scanCount    Int         @default(0)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt

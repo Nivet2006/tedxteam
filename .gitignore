@@ -56,8 +56,16 @@ CURSOR.md
 
 .vercel
 
-# User ignored files
+# Backend & Database files
 README.md
 /scripts/
 /prisma/
+prisma.config.ts
+*.prisma
+*.db
+*.sqlite
+*.sqlite-journal
+/lib/prisma.ts
+/app/generated/prisma
+
 

@@ -55,3 +55,9 @@ WINDSURF.md
 CURSOR.md
 
 .vercel
+
+# User ignored files
+README.md
+/scripts/
+/prisma/
+
